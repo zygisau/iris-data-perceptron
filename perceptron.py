@@ -3,17 +3,24 @@ import numpy as np
 
 class Perceptron:
 
-    def __init__(self, activation_function, compare_function=None, max_iterations=100, learning_rate=0.5):
+    def __init__(self, activation_function, compare_function=None, max_iterations=100,
+                 learning_rate=0.5, verbose=False):
         self.max_iterations = max_iterations
         self.learning_rate = learning_rate
         self.activation_function = activation_function
         self.weights = None
         self.prediction_error = 1
+        self.verbose = verbose
 
         if compare_function is not None:
-            self.compare_function = compare_function
+            self.is_prediction_equal_to_target_func = compare_function
         else:
-            self.compare_function = lambda prediction, target: prediction == target
+            self.is_prediction_equal_to_target_func = lambda prediction, target: prediction == target
+
+        if verbose:
+            print(f"Perceptron has been created. Settings: \n"
+                  f"learning rate: {self.learning_rate} \n"
+                  f"max_iterations: {self.max_iterations} \n")
 
     def __try_assign_weights_as_inputs(self, no_of_inputs, input_weights):
         BIAS_WEIGHT = 1
@@ -51,14 +58,17 @@ class Perceptron:
         targets = self.__get_targets_from_data(data)
         self.__init_weights(len(inputs[0]), weights)
 
-        for _ in range(self.max_iterations):
+        for epoch in range(self.max_iterations):
+            if self.verbose:
+                print(f"Epoch: {epoch + 1} starting...")
+
             good_predictions = 0
             is_model_edited = False
             for input_group, target in zip(inputs, targets):
                 prediction = self.predict(input_group)
                 error = abs(target - prediction)
 
-                if not self.compare_function(prediction, target):
+                if not self.is_prediction_equal_to_target_func(prediction, target):
                     is_model_edited = True
                     self.__optimise_weights(error, input_group)
                 else:
@@ -66,5 +76,14 @@ class Perceptron:
 
             self.prediction_error = 1 - (good_predictions / len(inputs))
 
+            if self.verbose:
+                print(f"Epoch has ended with: good predictions count: {good_predictions}; prediction error:"
+                      f"{self.prediction_error}; weights {self.weights}\n")
+
             if not is_model_edited:
+                if self.verbose:
+                    print(f"Model passed training earlier than max iterations\n")
                 break
+
+        if self.verbose:
+            print(f"Model is trained\n")
