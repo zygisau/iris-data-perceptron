@@ -1,4 +1,3 @@
-
 def split_files(file, indicator_1, indicator_2, file_name_1,
                 file_name_2, class_name_1, class_name_2):
     output_1 = open(file_name_1, 'w')
@@ -31,6 +30,7 @@ def split_into_first_set(file):
     split_files(file, OUTPUT_1_INDICATOR, OUTPUT_2_INDICATOR, OUTPUT_1_FILE,
                 OUTPUT_2_FILE, OUTPUT_1_CLASS, OUTPUT_2_CLASS)
 
+
 def split_into_second_set(file):
     OUTPUT_1_FILE = 'data/dataset_2_1.txt'
     OUTPUT_2_FILE = 'data/dataset_2_2.txt'
@@ -40,6 +40,7 @@ def split_into_second_set(file):
     OUTPUT_2_CLASS = 1
     split_files(file, OUTPUT_1_INDICATOR, OUTPUT_2_INDICATOR, OUTPUT_1_FILE,
                 OUTPUT_2_FILE, OUTPUT_1_CLASS, OUTPUT_2_CLASS)
+
 
 if __name__ == '__main__':
     file_name = "data/iris.data"
