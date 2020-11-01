@@ -17,10 +17,9 @@ class Perceptron:
         else:
             self.is_prediction_equal_to_target_func = lambda prediction, target: prediction == target
 
-        if verbose:
-            print(f"Perceptron has been created. Settings: \n"
-                  f"learning rate: {self.learning_rate} \n"
-                  f"max_iterations: {self.max_iterations} \n")
+        self.__print_message_if_verbose(f"Perceptron has been created. Settings: \n"
+                                        f"learning rate: {self.learning_rate} \n"
+                                        f"max_iterations: {self.max_iterations} \n")
 
     def __try_assign_weights_as_inputs(self, no_of_inputs, input_weights):
         BIAS_WEIGHT = 1
@@ -53,20 +52,23 @@ class Perceptron:
     def __get_targets_from_data(self, data):
         return [group[-1] for group in data]
 
+    def __print_message_if_verbose(self, msg):
+        if self.verbose:
+            print(msg)
+
     def train(self, data, weights=None):
         inputs = self.__get_inputs_from_data(data)
         targets = self.__get_targets_from_data(data)
         self.__init_weights(len(inputs[0]), weights)
 
         for epoch in range(self.max_iterations):
-            if self.verbose:
-                print(f"Epoch: {epoch + 1} starting...")
+            self.__print_message_if_verbose(f"Epoch: {epoch + 1} starting...")
 
             good_predictions = 0
             is_model_edited = False
             for input_group, target in zip(inputs, targets):
                 prediction = self.predict(input_group)
-                error = abs(target - prediction)
+                error = target - prediction
 
                 if not self.is_prediction_equal_to_target_func(prediction, target):
                     is_model_edited = True
@@ -76,14 +78,12 @@ class Perceptron:
 
             self.prediction_error = 1 - (good_predictions / len(inputs))
 
-            if self.verbose:
-                print(f"Epoch has ended with: good predictions count: {good_predictions}; prediction error:"
-                      f"{self.prediction_error}; weights {self.weights}\n")
+            self.__print_message_if_verbose(f"Epoch has ended with: good predictions: {good_predictions}"
+                                            f" / {len(inputs)}; prediction error: {self.prediction_error}; "
+                                            f"weights {self.weights}\n")
 
             if not is_model_edited:
-                if self.verbose:
-                    print(f"Model passed training earlier than max iterations\n")
+                self.__print_message_if_verbose(f"Model passed training earlier than max iterations\n")
                 break
 
-        if self.verbose:
-            print(f"Model is trained\n")
+        self.__print_message_if_verbose(f"Model is trained\n")

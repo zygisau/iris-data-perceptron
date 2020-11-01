@@ -28,7 +28,7 @@ if __name__ == '__main__':
     learning_rate = 0.5
 
     perceptron = Perceptron(activation_function=activation_function, compare_function=compare_target_to_prediction,
-                            max_iterations=max_iterations, learning_rate=learning_rate, verbose=True)
+                            max_iterations=max_iterations, learning_rate=learning_rate, verbose=False)
     perceptron.train(train_data, weights)
     print(perceptron.prediction_error)
     print(perceptron.weights)
