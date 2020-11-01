@@ -44,9 +44,8 @@ if __name__ == '__main__':
         good_predictions += compare_target_to_prediction(prediction, target)
 
     error_percentage = "{0:.0%}".format(mean(error))
-    # PaintingService.paint(error)
-    print(error)
-    print(f"Error: {error_percentage}")
+    print(f"Errors: {error}")
+    print(f"Mean error: {error_percentage}")
 
     accuracy_percentage = "{0:.0%}".format(good_predictions / len(test_data_targets))
     print(f"Classification accuracy: {accuracy_percentage}")
