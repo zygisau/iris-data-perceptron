@@ -18,6 +18,24 @@ def compare_target_to_prediction(prediction_value, target_value):
     return prediction_class == target_value
 
 
+def test_model(test_data):
+    test_data_inputs = [group[:-1] for group in test_data]
+    test_data_targets = [group[-1] for group in test_data]
+    good_predictions = 0
+    error = list()
+    for input_group, target in zip(test_data_inputs, test_data_targets):
+        prediction = perceptron.predict(input_group)
+        error.append(abs(prediction - target))
+        good_predictions += compare_target_to_prediction(prediction, target)
+
+    error_percentage = "{0:.0%}".format(mean(error))
+    print(f"Errors: {error}")
+    print(f"Mean error: {error_percentage}")
+
+    accuracy_percentage = "{0:.0%}".format(good_predictions / len(test_data_targets))
+    print(f"Classification accuracy: {accuracy_percentage}")
+
+
 if __name__ == '__main__':
     threshold = 0.5  # only used with sigmoid function
 
@@ -34,18 +52,4 @@ if __name__ == '__main__':
     perceptron.train(train_data, weights)
     print(f"Weights: {[ '%.2f' % elem for elem in perceptron.weights ]}")
 
-    test_data_inputs = [group[:-1] for group in train_data]
-    test_data_targets = [group[-1] for group in train_data]
-    good_predictions = 0
-    error = list()
-    for input_group, target in zip(test_data_inputs, test_data_targets):
-        prediction = perceptron.predict(input_group)
-        error.append(abs(prediction - target))
-        good_predictions += compare_target_to_prediction(prediction, target)
-
-    error_percentage = "{0:.0%}".format(mean(error))
-    print(f"Errors: {error}")
-    print(f"Mean error: {error_percentage}")
-
-    accuracy_percentage = "{0:.0%}".format(good_predictions / len(test_data_targets))
-    print(f"Classification accuracy: {accuracy_percentage}")
+    test_model(test_data)
