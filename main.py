@@ -1,4 +1,6 @@
 import math
+from statistics import mean
+
 from perceptron import Perceptron
 from fetch import DataSetType, FetchingService
 
@@ -19,7 +21,7 @@ def compare_target_to_prediction(prediction_value, target_value):
 if __name__ == '__main__':
     threshold = 0.5  # only used with sigmoid function
 
-    data_sets = DataSetType.FIRST_SET
+    data_sets = DataSetType.SECOND_SET
     train_data, test_data = FetchingService.fetch_data(data_sets)
     weights = [1.0, 1.0, 1.0, 1.0, 1.0]
 
@@ -30,13 +32,21 @@ if __name__ == '__main__':
     perceptron = Perceptron(activation_function=activation_function, compare_function=compare_target_to_prediction,
                             max_iterations=max_iterations, learning_rate=learning_rate, verbose=False)
     perceptron.train(train_data, weights)
-    print(perceptron.prediction_error)
-    print(perceptron.weights)
+    print(f"Weights: {[ '%.2f' % elem for elem in perceptron.weights ]}")
 
     test_data_inputs = [group[:-1] for group in train_data]
     test_data_targets = [group[-1] for group in train_data]
     good_predictions = 0
+    error = list()
     for input_group, target in zip(test_data_inputs, test_data_targets):
         prediction = perceptron.predict(input_group)
+        error.append(abs(prediction - target))
         good_predictions += compare_target_to_prediction(prediction, target)
-    print(good_predictions / len(test_data_targets))
+
+    error_percentage = "{0:.0%}".format(mean(error))
+    # PaintingService.paint(error)
+    print(error)
+    print(f"Error: {error_percentage}")
+
+    accuracy_percentage = "{0:.0%}".format(good_predictions / len(test_data_targets))
+    print(f"Classification accuracy: {accuracy_percentage}")
