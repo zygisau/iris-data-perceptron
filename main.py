@@ -29,7 +29,8 @@ def test_model(test_data):
         good_predictions += compare_target_to_prediction(prediction, target)
 
     error_percentage = "{0:.0%}".format(mean(error))
-    print(f"Errors: {error}")
+    error_rounded = [round(val, 2) for val in error]
+    print(f"Errors: {error_rounded}")
     print(f"Mean error: {error_percentage}")
 
     accuracy_percentage = "{0:.0%}".format(good_predictions / len(test_data_targets))
@@ -39,11 +40,11 @@ def test_model(test_data):
 if __name__ == '__main__':
     threshold = 0.5  # only used with sigmoid function
 
-    data_sets = DataSetType.SECOND_SET
+    data_sets = DataSetType.FIRST_SET
     train_data, test_data = FetchingService.fetch_data(data_sets)
     weights = [1.0, 1.0, 1.0, 1.0, 1.0]
 
-    activation_function = sigmoid_function
+    activation_function = threshold_function
     max_iterations = 100
     learning_rate = 0.5
 
